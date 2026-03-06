@@ -1,0 +1,29 @@
+{
+  "name": "mobile",
+  "version": "1.0.0",
+  "main": "index.ts",
+  "scripts": {
+    "dev": "/home/tanvir-sheikh/.local/share/fnm/fnm exec --using=20.19.4 expo start --port 8082",
+    "start": "/home/tanvir-sheikh/.local/share/fnm/fnm exec --using=20.19.4 expo start --port 8082",
+    "android": "/home/tanvir-sheikh/.local/share/fnm/fnm exec --using=20.19.4 expo start --android --port 8082",
+    "ios": "/home/tanvir-sheikh/.local/share/fnm/fnm exec --using=20.19.4 expo start --ios --port 8082",
+    "web": "/home/tanvir-sheikh/.local/share/fnm/fnm exec --using=20.19.4 expo start --web --port 8082",
+    "lint": "echo 'Add ESLint for mobile app'",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@react-native-async-storage/async-storage": "^2.2.0",
+    "expo": "~54.0.33",
+    "expo-status-bar": "~3.0.9",
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
+    "react-native": "0.81.5",
+    "react-native-safe-area-context": "^5.6.2",
+    "react-native-web": "^0.21.0"
+  },
+  "devDependencies": {
+    "@types/react": "~19.1.17",
+    "typescript": "~5.9.2"
+  },
+  "private": true
+}

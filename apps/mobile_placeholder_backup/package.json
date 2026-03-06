@@ -1,0 +1,11 @@
+{
+  "name": "mobile-placeholder-backup",
+  "private": true,
+  "version": "0.1.0",
+  "scripts": {
+    "dev": "echo 'Initialize Expo app here (npx create-expo-app apps/mobile)'",
+    "build": "echo 'Mobile build pipeline to be added'",
+    "lint": "echo 'Add ESLint for mobile app'",
+    "typecheck": "echo 'Add TypeScript checks for mobile app'"
+  }
+}

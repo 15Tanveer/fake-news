@@ -1,0 +1,12 @@
+node_modules
+.pnpm-store
+.next
+dist
+build
+.expo
+.expo-shared
+.pytest_cache
+__pycache__
+.venv
+.env
+.env.*
