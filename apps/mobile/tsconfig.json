@@ -1,7 +1,14 @@
 {
   "extends": "expo/tsconfig.base",
+  "exclude": ["app"],
   "compilerOptions": {
     "strict": true,
-    "jsx": "react-jsx"
+    "jsx": "react-jsx",
+    "jsxImportSource": "nativewind",
+    "types": ["nativewind/types", "node"],
+    "paths": {
+      "@mobile/*": ["./src/*"],
+      "@shared/*": ["../../shared/src/*"]
+    }
   }
 }

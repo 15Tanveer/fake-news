@@ -1,4 +1,5 @@
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Pressable, Text, View } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 
 import { AppRoute } from "../types";
 
@@ -12,96 +13,48 @@ export function BottomTabBar({ route, onChangeRoute }: BottomTabBarProps) {
   const isAccount = route === "account";
 
   return (
-    <View style={styles.container}>
-      <View style={styles.wrap}>
-        <Pressable style={styles.tab}>
-          <Text style={styles.icon}>◍</Text>
+    <View className="px-4 pt-1 pb-3">
+      <View className="flex-row items-center justify-between bg-[#17171c] rounded-[28px] px-5 py-3 border border-white/10">
+        
+        {/* Home icon */}
+        <Pressable className="w-[42px] h-[32px] items-center justify-center">
+          <Ionicons name="home-outline" size={20} color="#c7c9d1" />
         </Pressable>
 
-        <Pressable style={styles.tab} onPress={() => onChangeRoute("account")}>
-          <Text style={[styles.icon, isAccount ? styles.activeIcon : null]}>◎</Text>
+        {/* Account */}
+        <Pressable
+          className="w-[42px] h-[32px] items-center justify-center"
+          onPress={() => onChangeRoute("account")}
+        >
+          <Ionicons
+            name="person-outline"
+            size={20}
+            color={isAccount ? "#f59e0b" : "#c7c9d1"}
+          />
         </Pressable>
 
-        <View style={styles.centerSlot} />
+        {/* center slot */}
+        <View className="w-[58px] h-[32px]" />
 
-        <Pressable style={styles.tab}>
-          <Text style={styles.icon}>⌁</Text>
+        {/* search */}
+        <Pressable className="w-[42px] h-[32px] items-center justify-center">
+          <Ionicons name="search-outline" size={20} color="#c7c9d1" />
         </Pressable>
 
-        <Pressable style={styles.tab}>
-          <Text style={styles.icon}>☰</Text>
+        {/* menu */}
+        <Pressable className="w-[42px] h-[32px] items-center justify-center">
+          <Ionicons name="menu-outline" size={20} color="#c7c9d1" />
         </Pressable>
       </View>
 
+      {/* Center Floating Button */}
       <Pressable
-        style={[styles.centerButton, isHome ? styles.centerButtonActive : null]}
         onPress={() => onChangeRoute("detector")}
+        className={`absolute self-center -top-3 w-[58px] h-[58px] rounded-full border-[3px] border-[#2a2a31] items-center justify-center
+        ${isHome ? "bg-white shadow-lg" : "bg-white"}`}
       >
-        <Text style={styles.centerButtonIcon}>≡</Text>
+        <Ionicons name="scan-outline" size={22} color="#f59e0b" />
       </Pressable>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    paddingHorizontal: 16,
-    paddingBottom: 10,
-    paddingTop: 2,
-    backgroundColor: "transparent",
-  },
-  wrap: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    backgroundColor: "#17171c",
-    borderRadius: 28,
-    paddingHorizontal: 18,
-    paddingVertical: 12,
-    borderWidth: 1,
-    borderColor: "rgba(255,255,255,0.08)",
-  },
-  tab: {
-    width: 42,
-    alignItems: "center",
-    justifyContent: "center",
-    height: 32,
-  },
-  centerSlot: {
-    width: 58,
-    height: 32,
-  },
-  icon: {
-    color: "#c7c9d1",
-    fontSize: 18,
-    fontWeight: "700",
-  },
-  activeIcon: {
-    color: "#f59e0b",
-  },
-  centerButton: {
-    position: "absolute",
-    alignSelf: "center",
-    top: -10,
-    width: 58,
-    height: 58,
-    borderRadius: 29,
-    backgroundColor: "#f5f5f7",
-    borderWidth: 3,
-    borderColor: "#2a2a31",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  centerButtonActive: {
-    shadowColor: "#f59e0b",
-    shadowOpacity: 0.45,
-    shadowRadius: 10,
-    shadowOffset: { width: 0, height: 2 },
-    elevation: 8,
-  },
-  centerButtonIcon: {
-    color: "#f59e0b",
-    fontSize: 18,
-    fontWeight: "900",
-  },
-});

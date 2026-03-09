@@ -11,7 +11,8 @@ import {
   persistSession,
   signupRequest,
 } from "../services/api";
-import { AppRoute, QuotaStatus, UserProfile } from "../types";
+import { QuotaStatus, UserProfile } from "../types";
+import { SignupSchemaType } from "@mobile/schemas/auth.schema";
 
 const defaultQuota: QuotaStatus = {
   plan: "guest",
@@ -27,8 +28,6 @@ function getIsLocked(quota: QuotaStatus): boolean {
 }
 
 export function useAppController() {
-  const [route, setRoute] = useState<AppRoute>("detector");
-
   const [user, setUser] = useState<UserProfile | null>(null);
   const [token, setToken] = useState<string | null>(null);
   const [quota, setQuota] = useState<QuotaStatus>(defaultQuota);
@@ -44,12 +43,6 @@ export function useAppController() {
 
   const [loginEmail, setLoginEmail] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
-
-  const [signupFirstName, setSignupFirstName] = useState("");
-  const [signupLastName, setSignupLastName] = useState("");
-  const [signupEmail, setSignupEmail] = useState("");
-  const [signupPassword, setSignupPassword] = useState("");
-  const [signupConfirm, setSignupConfirm] = useState("");
 
   const isLocked = useMemo(() => getIsLocked(quota), [quota]);
   const quotaLabel = quota.limit === null ? "Unlimited" : `${quota.used} / ${quota.limit}`;
@@ -89,12 +82,12 @@ export function useAppController() {
     void loadSession();
   }, []);
 
-  const login = async (): Promise<void> => {
+  const login = async (): Promise<boolean> => {
     setErrorMessage(null);
 
     if (!loginEmail || !loginPassword) {
       setErrorMessage("Please enter email and password");
-      return;
+      return false;
     }
 
     try {
@@ -104,56 +97,44 @@ export function useAppController() {
 
       setToken(data.token);
       setUser(data.user);
-      setRoute("detector");
       setLoginEmail("");
       setLoginPassword("");
 
       const freshQuota = await fetchQuota(data.token);
       setQuota(freshQuota);
+      return true;
     } catch (error) {
       setErrorMessage(error instanceof Error ? error.message : "Login failed");
+      return false;
     } finally {
       setLoading(false);
     }
   };
 
-  const signup = async (): Promise<void> => {
+  const signup = async (data: SignupSchemaType): Promise<boolean> => {
     setErrorMessage(null);
-
-    if (!signupFirstName || !signupLastName || !signupEmail || !signupPassword) {
-      setErrorMessage("Please fill all signup fields");
-      return;
-    }
-
-    if (signupPassword !== signupConfirm) {
-      setErrorMessage("Password mismatch");
-      return;
-    }
 
     try {
       setLoading(true);
-      const data = await signupRequest({
-        firstName: signupFirstName,
-        lastName: signupLastName,
-        email: signupEmail,
-        password: signupPassword,
+
+      const res = await signupRequest({
+        firstName: data.firstName,
+        lastName: data.lastName,
+        email: data.email,
+        password: data.password,
       });
 
-      await persistSession(data.token, data.user);
+      await persistSession(res.token, res.user);
 
-      setToken(data.token);
-      setUser(data.user);
-      setRoute("detector");
-      setSignupFirstName("");
-      setSignupLastName("");
-      setSignupEmail("");
-      setSignupPassword("");
-      setSignupConfirm("");
+      setToken(res.token);
+      setUser(res.user);
 
-      const freshQuota = await fetchQuota(data.token);
+      const freshQuota = await fetchQuota(res.token);
       setQuota(freshQuota);
+      return true;
     } catch (error) {
       setErrorMessage(error instanceof Error ? error.message : "Signup failed");
+      return false;
     } finally {
       setLoading(false);
     }
@@ -174,7 +155,6 @@ export function useAppController() {
 
     setToken(null);
     setUser(null);
-    setRoute("detector");
 
     const freshQuota = await fetchQuota(undefined);
     setQuota(freshQuota);
@@ -184,7 +164,6 @@ export function useAppController() {
     setErrorMessage(null);
 
     if (isLocked || !text.trim()) {
-      if (isLocked && !user) setRoute("login");
       return;
     }
 
@@ -213,8 +192,6 @@ export function useAppController() {
   };
 
   return {
-    route,
-    setRoute,
     user,
     quota,
     text,
@@ -232,16 +209,6 @@ export function useAppController() {
     setLoginEmail,
     loginPassword,
     setLoginPassword,
-    signupFirstName,
-    setSignupFirstName,
-    signupLastName,
-    setSignupLastName,
-    signupEmail,
-    setSignupEmail,
-    signupPassword,
-    setSignupPassword,
-    signupConfirm,
-    setSignupConfirm,
     login,
     signup,
     logout,
